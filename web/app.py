@@ -3,20 +3,49 @@ from flask_restful import Api, Resource
 from pymongo import MongoClient
 import bcrypt
 
+# Setup Flask
 app = Flask(__name__)
 api = Api(app)
 
+# Setup MongoDB database
 client = MongoClient("mongodb://db:27017")
 db = client.SimilarityDB
 users = db["Users"]
 
+
 def UserExist(username):
+    """
+    Check whether a username is already registered.
+
+    Params
+    ____________
+    username: str
+
+    Returns
+    ____________
+    True, False: Boolean
+    """
     if users.find({"Username":username}).count() == 0:
         return False
     else:
         return True
 
 class Register(Resource):
+    """
+    Creates a POST request which allows user to
+    register to API service with a username, 
+    password, and is provided with a default of
+    6 tokens for purchase.
+
+    Params
+    ____________
+    Resource: class
+    
+    Returns
+    ____________
+    retJson: JSON object
+
+    """
     def post(self):
         #Step 1 is to get posted data by the user
         postedData = request.get_json(force=True)
@@ -48,6 +77,21 @@ class Register(Resource):
         return jsonify(retJson)
 
 def verifyPw(username, password):
+    """
+    Verifies whether user entered correct password
+    matching to the appropriate hashed password in 
+    the MongoDB document (record).
+
+    Params
+    ____________
+    username: str
+    password: str
+
+    Returns
+    ____________
+    True, False: Boolean
+
+    """
     if not UserExist(username):
         return False
 
@@ -61,12 +105,28 @@ def verifyPw(username, password):
         return False
 
 def countTokens(username):
+    """
+    Counts number of tokens held by the
+    user.
+
+    Params
+    ____________
+    username: str
+        
+    Returns
+    ____________
+    tokens: int
+    """
     tokens = users.find({
         "Username":username
     })[0]["Tokens"]
     return tokens
 
 class Detect(Resource):
+    """
+    Detects similarity between two sentences
+    of text
+    """
     def post(self):
         #Step 1 get the posted data
         postedData = request.get_json(force=True)
@@ -128,6 +188,10 @@ class Detect(Resource):
         return jsonify(retJson)
 
 class Refill(Resource):
+    """
+    Allows admin to refill number of tokens
+    held by the user if depleted.
+    """
     def post(self):
         postedData = request.get_json(force=True)
 
