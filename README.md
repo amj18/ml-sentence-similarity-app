@@ -1,14 +1,14 @@
 # Spacy sentence similarity app using a Flask REST API and MongoDB NoSQL database
 
 Project structure:
-
+<div>
 ml-sentence-similarity-app
 |
 |-- web/
-|  |-- __ init __ .py
+|  |-- \_\_init\_\_ .py
 |  |-- app.py
 |  |-- Dockerfile
-|  |-- en_core_web_sm-2.2.0.tar.gz
+|  |-- en\_core\_web\_sm-2.2.0.tar.gz
 |  |-- requirements.txt
 |
 |-- db/
@@ -16,7 +16,7 @@ ml-sentence-similarity-app
 |
 |-- docker-compose.yml
 |-- README.md
-
+</div>
 
 To run the app, open up a terminal in this folder with Docker installed and type:
 - sudo docker-compose build
